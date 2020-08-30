@@ -1,0 +1,74 @@
+
+	For this project, the optimal configuration I found for my algorithm's training parameters 
+was a neural network with three input values,a hidden node layer made up of five hidden nodes,
+and one output node, the calculation of which included the sigmoid function. The three inputs
+that I found to be most successful were the bird's x distance to the next pipe, the bird's y
+ distance to the next pipe, and the bird's height from the ground.
+ 
+	For this project, part 1 (the FlappyBird clone) was built with the later sections/projected 
+functionality of the project in mind; I knew that there needed to be a way to access the bird's
+nearest pipe, and that the nearest pipe wasn't always the first or last pipe in a potential storage
+method.Thus, I chose to store the pipes in a linked list, which gave me the most freedom when it came 
+to accessing the pipes that had been stored; I could retrieve a pipe from a certain index, or I 
+could also use the getFirst() and getLast(0 methods to retrieve the head or tail of the list. In addition,
+I knew that I would eventually have a population containing many instances of Birds; to ease the transition
+in part 2, I chose to create a separate class Bird containing the shape node instead of directly including 
+the shape node in the game class. 
+	For Part 2, implementing the creation of a population of birds, which contained an Arraylist of
+live birds and a Stack of dead birds meant that I had to modify the structure of my game class in
+order to accommodate for these new data structures & a larger amount of birds. First, wherever I had 
+previously called methods on my bird class, I now had to loop through the live bird list and call the 
+method on the bird at every index of the list. In addition, while the process of graphically+logically
+removing the bird when it intersected the borders or a pipe and restarting the game had occurred in the
+same method in my clone, it was not the case in part II: Now, instead, birds are individually graphically 
+removed when they die, removed from the livebirds list, and added to the deadbirds stack. In addition, 
+the game only restarts when there are no more live birds left. For this kind of functionality, I used
+a combination of for loops and if statements; the for loops iterated through the list to check if any
+of the birds intersected pipes, and the if statements were used to structure the conditions of death (intersects method).
+I used a stack instead of an Arraylist for storing my dead birds because I was taking into consideration how I would
+track bird fitness/access the two most fit birds in order to pass their weights to a portion of the
+next generation; since stacks are LIFO, it makes it really easy to retrieve the most recently
+deceased bird, pop it from the stack, and then retrieve the next bird. 
+To optimize the training process, I initialized both my input values and my weights in the Bird class. Having the 
+inputs array in the bird class streamlined the way in which they were retrieved (since a bird knows its own location), and 
+initializing the weights arrays in the bird class meant that each bird would know about its own weights, which would make 
+passing down the most "fit" weights down to the next generation easier. Thus, my Neural Network class was mostly more of
+a calculator, which I passed my inputs array and my weights arrays into. 
+
+During the optimization process, I first experimented with the number of inputs passed into the Neural Network. I initially
+chose to use the x distance from the first pipe, and the bird's y distance from the bottom of the game as my two inputs, with
+three hidden layers. However, I found that the birds learned way too slowly and progress was undetectable until I was at least ~50 generations
+in--therefore, I decided to increase the number of inputs and hidden layer nodes. For my third input, I added the bird's x distance 
+from the second pipe, and I added two more hidden layer nodes (for a total of five hidden layer nodes). However, I found that now the birds
+were doing well until they passed the first pipe; then, they would collectively jump in a slower more systematic way (a downwards trajectory). 
+To troubleshoot, I printed out my output values for each time forward propagation occurred; I found that I would have one really small value(very close to zero,
+followed by a series of very large values (extremely close to 1). From this evidence, I could tell that my output values were somehow too extreme; this probably
+meant that the sums calculated from inputxsyn0 and hiddenlayerxsyn1 became way too large, so that when the sigmoid function was called these differences became 
+magnified. Thus, I tried dividing the input values by the game pane height constant in order to make sure they were all between zero and 1. This actually
+solved my problem; after I implemented this change, birds were learning more quickly and showed better results/improvement with each new generation. 
+Lastly, I also experimented with my mutation rate. I found that having too low of a mutation rate (<.2) narrowed down the diversity field too early in the training 
+process and ended up negatively impacting the number of generations it took to get to a higher fitness; on the other side of the spectrum, having too high of a mutation rate (>.6)
+meant that the field was too diverse and did not "learn" or inherit as many valuable "traits" or weights from the previous generation; thus, I chose a .4 mutation rate as a 
+happy medium between the two. 
+
+
+Visualizations:
+(check visualizations folder for screenshots!)
+To further refine my optimization process, I used the Visualization tool that we were provided with to first test my mutation rates again. I tested rates of .3, .4, and .5, and found that 
+.4, as I had earlier concluded, seemed like the happy medium between the two. From there, I began experimenting with more specific conditions. I tried changing the ratio of weights passed 
+down from the first and second most fit bird from .5 and .5 to .75 and .5. I also tried changing this ratio dependent on the average fitness of the past generation (if it exceeded a certaain 
+threshold). Lastly, I tested changing the mutation rate based on a threshhold for the average fitness & best fitness of the previous generation. Overall, I found that these chaanges
+unfortunately did not positively affect the learning process of my birds, and that my simpler approach earlier with just the .4 mutation rate was more effective, so I retested this aand
+indeed found thaat this was true. 
+Lastly, two GUI's I incorporated into this project were 1) using sprites to add nicer visuals to my game (with tile scrolling for the background) and 2)allowing user input
+into the game (users can control one of the birds in the population/decide when it jumps by pressing the spacebar), which means that a user could affect the way 
+evolution occurs in the game. 
+
+Overall, I found that this project was really rewarding, although difficult; I really enjoyed learning about neural networks. Thank you guys for all your help this semester!
+
+
+
+
+
+
+
